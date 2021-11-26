@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * The LabyrinthSolver class is used to solve
+ */
+
 public class LabyrinthSolver
 {
     private ArrayList<Integer> movesX;
@@ -12,20 +16,21 @@ public class LabyrinthSolver
     {
         int row = Integer.parseInt(args[0]);
         int col = Integer.parseInt(args[1]);
-      
-        LabyrinthSolver ls = new LabyrinthSolver(row, col);  
+        
+        Labyrinth l = new Labyrinth(row, col);
+        LabyrinthSolver ls = new LabyrinthSolver(row, col, l);  
         
         if(ls.findSafeMove(0, 0))
         {
            ls.printSolution();  
         }
         
-        System.out.println(ls.getMaze().solves(ls.solveArray()));
+        System.out.println(ls.getMaze().solves(ls.solves(l)));
     }
     
-    public LabyrinthSolver(int row, int col)
+    public LabyrinthSolver(int row, int col, Labyrinth l)
     {
-        maze = new Labyrinth(row, col);
+        maze = l;
         
         maxRow = row;
         maxCol = col;
@@ -37,12 +42,7 @@ public class LabyrinthSolver
         movesY.add(0);
     }
     
-    public Labyrinth getMaze()
-    {
-        return maze;
-    }
-    
-    public int[] solveArray()
+    public int[] solves(Labyrinth l)
     {
         int[] solution = new int[movesX.size()-1];
         //Up = 0, Down = 1, Left = 2, Right = 3
@@ -56,25 +56,26 @@ public class LabyrinthSolver
                 if (xDif == 1) //Down
                 {
                     solution[i] = 1;
-                    System.out.println("DOWN");
                 }else { //UP
                     solution[i] = 0;
-                    System.out.println("UP");
                 }
             }else { //If it went up/down
                 if (yDif == 1) //Right
                 {
                     solution[i] = 3;
-                    System.out.println("RIGHT");
                 }else if (yDif == -1) { //Left
                     solution[i] = 0;
-                    System.out.println("LEFT");
                 }
             }
         }
         return solution;
     }
     
+    public Labyrinth getMaze()
+    {
+        return maze;
+    }
+
     public void printSolution()
     {
         for (int row = 0; row<maxRow; row++)
@@ -96,8 +97,6 @@ public class LabyrinthSolver
     {
         if (row==(maxRow-1) && col==(maxCol-1))
         {
-            System.out.println("Solved");
-            
             return true;
         }
         
