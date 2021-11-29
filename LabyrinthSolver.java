@@ -14,31 +14,26 @@ public class LabyrinthSolver
     private int maxCol;
     private Labyrinth maze;
     
-    public static void main(String[] args)
-    {
-        int row = Integer.parseInt(args[0]);
-        int col = Integer.parseInt(args[1]);
-        
-        LabyrinthSolver ls = new LabyrinthSolver(row, col);  
-        
-        if(ls.findSafeMove(0, 0))
-        {
-           ls.printSolution();  
-        }
-        
-        System.out.println(ls.getMaze().solves(ls.solves(ls.getMaze())));
-    }
-    
-    
     /**
      * Constructor for LabyrinthSolver
      * @return void
      * @param Takes an integer representing the # of rows in the maze
      * @param Takes an integer representing the # of columns in the maze
      */
-    public LabyrinthSolver(int row, int col)
+    public LabyrinthSolver(Labyrinth l)
     {
-        Labyrinth l = new Labyrinth(row, col);
+        int row = 0;
+        int col = 0;
+        //First we must ascertain the row/columns of the labyrinth
+        while(l.isValid(row, 0))
+        {
+            row++;
+        }
+
+        while(l.isValid(0, col))
+        {
+            col++;
+        }
         maze = l;
         
         maxRow = row;
@@ -53,12 +48,10 @@ public class LabyrinthSolver
     }
     
     /**
-     * The solves method outputs a list of instructions to complete the maze which
-     * can be fed to the Labyrinth class to check if it actually solves the maze.
-     * @return Array of integers representing the direction of the move (Up = 0, Down = 1, Left = 2, Right = 3)
-     * @param Takes a Labyrinth
+     * Helpful method for creating the solution array to the maze
+     * @return Array of integers containing instructions to solve the maze
      */
-    public int[] solves(Labyrinth l)
+    public int[] solveArray()
     {
         int[] solution = new int[movesX.size()-1]; //1 Less because it doesn't contain starting square
         //Up = 0, Down = 1, Left = 2, Right = 3
@@ -88,6 +81,19 @@ public class LabyrinthSolver
     }
     
     /**
+     * The solves method outputs a list of instructions to complete the maze which
+     * can be fed to the Labyrinth class to check if it actually solves the maze.
+     * @return Array of integers representing the direction of the move (Up = 0, Down = 1, Left = 2, Right = 3)
+     * @param Takes a Labyrinth which it will solve
+     */
+    public static int[] solves(Labyrinth l)
+    {        
+        LabyrinthSolver ls = new LabyrinthSolver(l);
+        ls.findSafeMove(0, 0);
+        return ls.solveArray();
+    }
+    
+    /**
      * Useful getter method
      * @return A Labyrinth Object representing the current maze
      */
@@ -96,26 +102,6 @@ public class LabyrinthSolver
         return maze;
     }
 
-    /**
-     * 
-     */
-    public void printSolution()
-    {
-        for (int row = 0; row<maxRow; row++)
-        {
-            for (int col = 0; col<maxCol; col++)
-            {
-                if (maze.isStone(row, col))
-                {
-                   System.out.print("_ "); 
-                }else {
-                   System.out.print("# ");  
-                }
-            }
-            System.out.println();
-        }
-    }
-    
     /**
      * The all-imporant recursive method which actually traverses the maze. It also
      * updates the movesX and movesY arrays so that they contain all the correct moves once finished
