@@ -13,7 +13,7 @@ public class LabyrinthSolver
     private int maxRow;
     private int maxCol;
     private Labyrinth maze;
-    
+
     /**
      * Constructor for LabyrinthSolver
      * @return void
@@ -22,22 +22,10 @@ public class LabyrinthSolver
      */
     public LabyrinthSolver(Labyrinth l)
     {
-        int row = 0;
-        int col = 0;
-        //First we must ascertain the row/columns of the labyrinth
-        while(l.isValid(row, 0))
-        {
-            row++;
-        }
-
-        while(l.isValid(0, col))
-        {
-            col++;
-        }
         maze = l;
         
-        maxRow = row;
-        maxCol = col;
+        maxRow = l.rows;
+        maxCol = l.cols;
         
         movesX = new ArrayList<Integer>();
         movesY = new ArrayList<Integer>();
@@ -73,7 +61,7 @@ public class LabyrinthSolver
                 {
                     solution[i] = 3;
                 }else if (yDif == -1) { //Left
-                    solution[i] = 0;
+                    solution[i] = 2;
                 }
             }
         }
@@ -86,7 +74,7 @@ public class LabyrinthSolver
      * @return Array of integers representing the direction of the move (Up = 0, Down = 1, Left = 2, Right = 3)
      * @param Takes a Labyrinth which it will solve
      */
-    public static int[] solves(Labyrinth l)
+    public static int[] solve(Labyrinth l)
     {        
         LabyrinthSolver ls = new LabyrinthSolver(l);
         ls.findSafeMove(0, 0);
@@ -172,7 +160,7 @@ public class LabyrinthSolver
      */
     public boolean isSafe(int row, int col)
     {
-       return maze.isValid(row, col) && maze.isStone(row, col)&& hasntMoved(row, col);
+       return maze.isValid(row, col) && maze.isStone(row, col) && hasntMoved(row, col);
     }
     
     /**
@@ -215,14 +203,7 @@ public class LabyrinthSolver
      */
     public void removeMove(int row, int col)
     {
-        for (int i = 0; i<movesX.size(); i++)
-        {
-          if (row == movesX.get(i) && col == movesY.get(i))
-          {
-              movesX.remove(i);
-              movesY.remove(i);
-              return;
-          }
-        }
+        movesX.remove(movesX.size()-1);
+        movesY.remove(movesY.size()-1);
     }
 }
